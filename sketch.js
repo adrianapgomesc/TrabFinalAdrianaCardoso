@@ -1,4 +1,3 @@
-
 let pagina = 0;
 let fonteCarregada = false;
 
@@ -25,31 +24,31 @@ let bandas = [
     nome: "DEFTONES //",
     ano: "1988",
     estilo: "Alternative metal / Nu metal",
-    curiosidade: "Curiosidades sobre a banda a acrescentar."
+    curiosidade: "Antes de gravarem o álbum Around the Fur, o baixista Chi Cheng, que estudava inglês, quase abandonou a banda para se tornar professor. Em 1993/94, a banda assinou um contrato de gravação com a Maverick Records, empresa fundada por Madonna."
   },
   {
     nome: "SYSTEM OF A DOWN //",
     ano: "1994",
     estilo: "Alternative metal / Nu metal",
-    curiosidade: "Curiosidades sobre a banda a acrescentar."
+    curiosidade: "O nome da banda tem origem num poema escrito pelo guitarrista Daron Malakian, chamado «Victims of a Down». A palavra «Victims» foi trocada por «System», para ser mais apelativa e ficar perto da banda Slayer nas prateleiras das lojas."
   },
   {
     nome: "RED HOT CHILI PEPPERS //",
     ano: "1983",
     estilo: "Funk rock / Alternative rock",
-    curiosidade: "Curiosidades sobre a banda a acrescentar."
+    curiosidade: "O icónico álbum Blood Sugar Sex Magik, o quinto álbum lançado pela banda, saiu exatamente no mesmo dia que o álbum Nevermind, dos Nirvana: 24 de setembro de 1991."
   },
   {
     nome: "FLEETWOOD MAC //",
     ano: "1967",
     estilo: "Rock / Pop rock / Blues rock",
-    curiosidade: "Curiosidades sobre a banda a acrescentar."
+    curiosidade: "Rumours, um dos álbuns mais conhecidos da banda, foi gravado enquanto dois casais dentro da banda estavam a separar-se. Passaram horas no estúdio a odiarem-se uns aos outros, mas acabaram por criar um dos álbuns mais vendidos de sempre, com mais de 45 milhões de cópias."
   },
   {
     nome: "GORILLAZ //",
     ano: "1998",
     estilo: "Alternative rock / Trip hop / Electronic",
-    curiosidade: "Curiosidades sobre a banda a acrescentar."
+    curiosidade: "O músico Damon Albarn e o ilustrador Jamie Hewlett dividiam um apartamento em Notting Hill quando tiveram a ideia de criar a banda Gorillaz. Ambos tinham terminado relações de longa data na altura e começaram a trabalhar no que viria a ser a sua nova banda."
   }
 ];
 
@@ -106,7 +105,6 @@ function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
-  // PREPARAR AS CINTILAÇÕES
   prepararCintilacoes();
 
   // CARREGAR OS FICHEIROS ASCII
@@ -142,7 +140,6 @@ function setup() {
       });
   }
 
-  // PREPARAR O VISUALIZADOR DE FREQUÊNCIAS
   prepararAnalisador();
 
   // CARREGAR AS MÚSICAS
@@ -157,7 +154,6 @@ function setup() {
 
     sons[indice] = audio;
 
-    // LIGAR O ÁUDIO AO VISUALIZADOR
     ligarAudioAoAnalisador(audio, indice);
 
     audio.addEventListener("canplay", function() {
@@ -217,7 +213,9 @@ function prepararCintilacoes() {
 
       fase: random(TWO_PI),
 
-      velocidade: random(0.015, 0.045)
+      velocidade: random(0.015, 0.045),
+
+      brilhoMaximo: random(100, 190)
 
     });
   }
@@ -233,14 +231,19 @@ function desenharCintilacoes() {
 
   for (let estrela of cintilacoes) {
 
-    // BRILHO QUE VARIA SUAVEMENTE
     let brilho = (
       sin(frameCount * estrela.velocidade + estrela.fase) + 1
     ) / 2;
 
-    let opacidade = map(brilho, 0, 1, 15, 115);
+    let opacidade = map(
+      brilho,
+      0,
+      1,
+      15,
+      estrela.brilhoMaximo
+    );
 
-    fill(210, opacidade);
+    fill(255, opacidade);
     noStroke();
 
     textSize(estrela.tamanho);
@@ -313,7 +316,6 @@ function draw() {
 
   background(0);
 
-  // CINTILAÇÕES APENAS NO ECRÃ INICIAL
   if (pagina === 0) {
     desenharCintilacoes();
   }
@@ -354,7 +356,6 @@ function draw() {
     desenharBanda();
   }
 
-  // SETAS DESENHADAS NO FINAL
   desenharSetas();
 }
 
@@ -426,12 +427,24 @@ function desenharInformacao(x, banda) {
 
   // CURIOSIDADES
   fill(150);
+  textFont("Arial");
+  textStyle(NORMAL);
   textSize(12);
-  text("SABIAS QUE?", x, 450);
+  textLeading(18);
+  text("SABIAS QUE?", x, 425);
 
   fill(255);
-  textSize(15);
-  text(banda.curiosidade, x, 475, larguraInfo, 100);
+  textSize(12);
+  textLeading(18);
+  textStyle(NORMAL);
+
+  text(
+    banda.curiosidade,
+    x,
+    448,
+    larguraInfo,
+    115
+  );
 
   // POSIÇÃO DO LEITOR
   let posicaoLeitor = min(570, height - 220);
@@ -443,7 +456,6 @@ function desenharInformacao(x, banda) {
 // DESENHAR O LEITOR
 function desenharLeitor(x, y, w) {
 
-  // LIMITAR A LARGURA DO LEITOR
   w = min(w, 360);
 
   leitorX = x;
@@ -617,19 +629,16 @@ function desenharProgresso(x, y, w) {
     }
   }
 
-  // BARRA DE FUNDO
   noStroke();
   fill(70);
   rect(x, y, w, 3);
 
-  // PROGRESSO
   fill(255);
   rect(x, y, w * progresso, 3);
 
-  // PONTO DE PROGRESSO
   circle(x + w * progresso, y + 1.5, 7);
 
-  // TEMPO DECORRIDO - ESQUERDA
+  // TEMPO DECORRIDO
   fill(150);
   textFont("Arial");
   textStyle(NORMAL);
@@ -638,7 +647,7 @@ function desenharProgresso(x, y, w) {
 
   text(formatarTempo(tempoAtual), x, y + 9);
 
-  // TEMPO RESTANTE - DIREITA
+  // TEMPO RESTANTE
   textAlign(RIGHT, TOP);
 
   let textoRestante = "-" + formatarTempo(tempoRestante);
@@ -657,7 +666,6 @@ function tocarMusica(indice) {
 
   let som = sons[indice];
 
-  // SE FOR UMA MÚSICA DIFERENTE, PARAR AS OUTRAS
   if (musicaAtual !== indice) {
 
     for (let i = 0; i < sons.length; i++) {
@@ -674,21 +682,17 @@ function tocarMusica(indice) {
       }
     }
 
-    // COMEÇAR A NOVA MÚSICA DO INÍCIO
     som.currentTime = 0;
   }
 
   musicaAtual = indice;
 
-  // CONTROLAR O VOLUME
   som.volume = musicaMuda ? 0 : 1;
 
-  // ATIVAR O CONTEXTO DE ÁUDIO
   if (contextoAudio && contextoAudio.state === "suspended") {
     contextoAudio.resume();
   }
 
-  // INICIAR OU RETOMAR A MÚSICA
   let tentativaReproducao = som.play();
 
   if (tentativaReproducao !== undefined) {
@@ -919,7 +923,6 @@ function desenharSetas() {
 // NAVEGAÇÃO
 function mousePressed() {
 
-  // PRIMEIRO VERIFICAR O LEITOR
   if (pagina > 0) {
 
     if (clicarNoLeitor()) {
@@ -964,6 +967,5 @@ function windowResized() {
 
   resizeCanvas(windowWidth, windowHeight);
 
-  // DISTRIBUIR NOVAMENTE AS CINTILAÇÕES
   prepararCintilacoes();
 }
