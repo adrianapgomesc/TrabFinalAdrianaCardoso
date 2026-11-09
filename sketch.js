@@ -24,7 +24,7 @@ let bandas = [
     nome: "DEFTONES //",
     ano: "1988",
     estilo: "Alternative metal / Nu metal",
-    curiosidade: "Antes de gravarem o álbum Around the Fur, o baixista Chi Cheng, que estudava inglês, quase abandonou a banda para se tornar professor. Em 1993/94, a banda assinou um contrato de gravação com a Maverick Records, empresa fundada por Madonna."
+    curiosidade: "Antes de gravarem o álbum Around the Fur, o baixista Chi Cheng, que estudava inglês, quase abandonou a banda para se tornar professor. Em 1993/94, a banda assinou um contrato de gravação com a Maverick Records, empresa fundada pela Madonna."
   },
   {
     nome: "SYSTEM OF A DOWN //",
