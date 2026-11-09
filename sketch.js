@@ -2,6 +2,9 @@
 let pagina = 0;
 let fonteCarregada = false;
 
+// ANIMAÇÃO DE CINTILAÇÕES
+let cintilacoes = [];
+
 // ASCII DAS CINCO BANDAS
 let imagensASCII = [[], [], [], [], []];
 let asciiCarregado = [false, false, false, false, false];
@@ -103,6 +106,9 @@ function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
+  // PREPARAR AS CINTILAÇÕES
+  prepararCintilacoes();
+
   // CARREGAR OS FICHEIROS ASCII
   for (let i = 0; i < ficheirosASCII.length; i++) {
 
@@ -191,6 +197,63 @@ function setup() {
 }
 
 
+// PREPARAR AS CINTILAÇÕES
+function prepararCintilacoes() {
+
+  cintilacoes = [];
+
+  let simbolos = ["✧", "✦", "⋆"];
+
+  for (let i = 0; i < 65; i++) {
+
+    cintilacoes.push({
+
+      x: random(width),
+      y: random(height),
+
+      simbolo: random(simbolos),
+
+      tamanho: random(9, 16),
+
+      fase: random(TWO_PI),
+
+      velocidade: random(0.015, 0.045)
+
+    });
+  }
+}
+
+
+// DESENHAR AS CINTILAÇÕES
+function desenharCintilacoes() {
+
+  textFont("Arial");
+  textStyle(NORMAL);
+  textAlign(CENTER, CENTER);
+
+  for (let estrela of cintilacoes) {
+
+    // BRILHO QUE VARIA SUAVEMENTE
+    let brilho = (
+      sin(frameCount * estrela.velocidade + estrela.fase) + 1
+    ) / 2;
+
+    let opacidade = map(brilho, 0, 1, 15, 115);
+
+    fill(210, opacidade);
+    noStroke();
+
+    textSize(estrela.tamanho);
+
+    text(
+      estrela.simbolo,
+      estrela.x,
+      estrela.y
+    );
+  }
+}
+
+
 // PREPARAR O ANALISADOR DE FREQUÊNCIAS
 function prepararAnalisador() {
 
@@ -249,6 +312,11 @@ function ligarAudioAoAnalisador(audio, indice) {
 function draw() {
 
   background(0);
+
+  // CINTILAÇÕES APENAS NO ECRÃ INICIAL
+  if (pagina === 0) {
+    desenharCintilacoes();
+  }
 
   // MUSIC ARCHIVE
   fill(255);
@@ -893,5 +961,9 @@ function mousePressed() {
 
 // AJUSTAR CANVAS
 function windowResized() {
+
   resizeCanvas(windowWidth, windowHeight);
+
+  // DISTRIBUIR NOVAMENTE AS CINTILAÇÕES
+  prepararCintilacoes();
 }
